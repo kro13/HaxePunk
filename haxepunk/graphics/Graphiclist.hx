@@ -105,7 +105,10 @@ typedef Graphiclist = BaseGraphicList<Graphic>;
 	{
 		for (g in _graphics)
 		{
-			g.destroy();
+			if (g != null)
+			{
+				g.destroy();
+			}
 		}
 	}
 

@@ -132,8 +132,8 @@ class Scene extends Tweener
 
 		_update = new List<Entity>();
 		_layerDisplay = new Map<Int, Bool>();
-		_layers = new Map<Int, List<Entity>>();
-		_types = new Map<String, List<Entity>>();
+		_layers = new Map<Int, Array<Entity>>();
+		_types = new Map<String, Array<Entity>>();
 
 		_classCount = new Map<String, Int>();
 		_recycled = new Map<String, Entity>();
@@ -485,7 +485,7 @@ class Scene extends Tweener
 		if (e._scene != this) return false;
 		var list = _layers.get(e._layer);
 		list.remove(e);
-		list.add(e);
+		list.push(e);
 		return true;
 	}
 
@@ -520,7 +520,7 @@ class Scene extends Tweener
 	 */
 	public inline function isAtFront(e:Entity):Bool
 	{
-		return e == _layers.get(e._layer).first();
+		return e == _layers.get(e._layer)[0];
 	}
 
 	/**
@@ -530,7 +530,7 @@ class Scene extends Tweener
 	 */
 	public inline function isAtBack(e:Entity):Bool
 	{
-		return e == _layers.get(e._layer).last();
+		return e == _layers.get(e._layer)[_layers.get(e._layer).length - 1];
 	}
 
 	/**
@@ -968,7 +968,7 @@ class Scene extends Tweener
 	 * @param	type 		The type to check.
 	 * @return 	The Entity list.
 	 */
-	public inline function entitiesForType(type:String):List<Entity>
+	public inline function entitiesForType(type:String):Array<Entity>
 	{
 		return _types.exists(type) ? _types.get(type) : null;
 	}
@@ -994,7 +994,7 @@ class Scene extends Tweener
 	 */
 	public function layerFirst(layer:Int):Entity
 	{
-		return _layers.exists(layer) ? _layers.get(layer).first() : null;
+		return _layers.exists(layer) ? _layers.get(layer)[0] : null;
 	}
 
 	/**
@@ -1004,7 +1004,7 @@ class Scene extends Tweener
 	 */
 	public function layerLast(layer:Int):Entity
 	{
-		return _layers.exists(layer) ? _layers.get(layer).last() : null;
+		return _layers.exists(layer) ? _layers.get(layer)[_layers.get(layer).length - 1] : null;
 	}
 
 	/**
@@ -1014,7 +1014,7 @@ class Scene extends Tweener
 	function get_farthest():Entity
 	{
 		if (_layerList.length == 0) return null;
-		return _layers.get(_layerList[_layerList.length - 1]).last();
+		return _layers.get(_layerList[_layerList.length - 1])[_layers.get(_layerList[_layerList.length - 1]).length - 1];
 	}
 
 	/**
@@ -1024,7 +1024,7 @@ class Scene extends Tweener
 	function get_nearest():Entity
 	{
 		if (_layerList.length == 0) return null;
-		return _layers.get(_layerList[0]).first();
+		return _layers.get(_layerList[0])[0];
 	}
 
 	/**
@@ -1096,13 +1096,9 @@ class Scene extends Tweener
 	 * @param	layer		The layer to check.
 	 * @param	into		The Array or Vector to populate.
 	 */
-	public function getLayer<E:Entity>(layer:Int, into:Array<E>)
+	public function getLayer<E:Entity>(layer:Int):Array<Entity>
 	{
-		var n:Int = into.length;
-		for (e in _layers.get(layer))
-		{
-			into[n++] = cast e;
-		}
+		return _layers.get(layer);
 	}
 
 	/**
@@ -1224,7 +1220,7 @@ class Scene extends Tweener
 	@:allow(haxepunk.Entity)
 	function addRender(e:Entity)
 	{
-		var list:List<Entity>;
+		var list:Array<Entity>;
 		if (_layers.exists(e._layer))
 		{
 			list = _layers.get(e._layer);
@@ -1232,7 +1228,7 @@ class Scene extends Tweener
 		else
 		{
 			// Create new layer with entity.
-			list = _pooledEntityLists.length > 0 ? _pooledEntityLists.pop() : new List<Entity>();
+			list = _pooledEntityLists.length > 0 ? _pooledEntityLists.pop() : new Array<Entity>();
 			_layers.set(e._layer, list);
 
 			if (_layerList.length == 0)
@@ -1244,7 +1240,7 @@ class Scene extends Tweener
 				HXP.insertSortedKey(_layerList, e._layer, layerSort);
 			}
 		}
-		list.add(e);
+		list.push(e);
 	}
 
 	/** @private Removes Entity from the render list. */
@@ -1265,7 +1261,7 @@ class Scene extends Tweener
 	@:allow(haxepunk.Entity)
 	function addType(e:Entity)
 	{
-		var list:List<Entity>;
+		var list:Array<Entity>;
 		// add to type list
 		if (_types.exists(e._type))
 		{
@@ -1273,7 +1269,7 @@ class Scene extends Tweener
 		}
 		else
 		{
-			list = _pooledEntityLists.length > 0 ? _pooledEntityLists.pop() : new List<Entity>();
+			list = _pooledEntityLists.length > 0 ? _pooledEntityLists.pop() : new Array<Entity>();
 			_types.set(e._type, list);
 		}
 		list.push(e);
@@ -1364,14 +1360,14 @@ class Scene extends Tweener
 	// Render information.
 	var _layerList:Array<Int>;
 	var _layerDisplay:Map<Int, Bool>;
-	var _layers:Map<Int, List<Entity>>;
+	var _layers:Map<Int, Array<Entity>>;
 
 	var _classCount:Map<String, Int>;
 
-	var _types:Map<String, List<Entity>>;
+	var _types:Map<String, Array<Entity>>;
 
 	var _recycled:Map<String, Entity>;
 	var _entityNames:Map<String, Entity>;
 
-	static var _pooledEntityLists:Array<List<Entity>> = new Array();
+	static var _pooledEntityLists:Array<Array<Entity>> = new Array();
 }

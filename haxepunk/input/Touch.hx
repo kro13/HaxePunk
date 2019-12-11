@@ -6,7 +6,19 @@ class Touch
 {
 	public static function update()
 	{
-		for (touchId in _touchOrder) _touches[touchId].updateTouch();
+		for (touchId in _touchOrder)
+		{
+			if (_touches[touchId] != null)
+			{
+				_touches[touchId].updateTouch();
+			}
+			else
+			{
+				_touchOrder.remove(touchId);
+				_touches.remove(touchId);
+				break;
+			}
+		}
 
 		if (Gesture.enabled) Gesture.update();
 
@@ -15,7 +27,7 @@ class Touch
 		{
 			var touchId = _touchOrder[i],
 				touch = _touches[touchId];
-			if (touch.released && !touch.pressed)
+			if (touch == null && touch.released && !touch.pressed)
 			{
 				_touches.remove(touchId);
 				_touchOrder.remove(touchId);
