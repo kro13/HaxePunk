@@ -323,6 +323,9 @@ class BitmapText extends Graphic
 	 * 						leading		Vertical space between lines. (Currently ignored.)
 	 *						richText	If the text field uses a rich text string. (Currently ignored.)
 	 */
+
+	public var align:AlignType = AlignType.Left;
+
 	public function new(text:Utf8String, x:Float = 0, y:Float = 0, width:Int = 0, height:Int = 0, ?options:BitmapTextOptions)
 	{
 		super();
@@ -361,6 +364,15 @@ class BitmapText extends Graphic
 
 		this.color = options.color;
 		this.text = text != null ? text : "";
+
+		if (options.align == "left")
+		{
+			align = AlignType.Left;
+		}
+		else if (options.align == "right")
+		{
+			align = AlignType.Right;
+		}
 	}
 
 	public var text(default, set):Utf8String;
@@ -422,7 +434,7 @@ class BitmapText extends Graphic
 			currentScale:Float = 1,
 			currentFont:IBitmapFont = _font,
 			currentSizeRatio:Float = 1,
-			currentAlign:AlignType = AlignType.Left,
+			currentAlign:AlignType = align,
 			wrapping:Bool = false,
 			currentWordTrailingWhitespace:Float = 0;
 

@@ -11,6 +11,8 @@ import haxepunk.utils.Ease.EaseFunction;
 @:allow(haxepunk.graphics.emitter.BaseEmitter)
 class ParticleType
 {
+	public var startScaleRange:Float = 0;
+
 	public inline function ease(?f:EaseFunction, t:Float):Float
 	{
 		return f == null ? t : f(t);

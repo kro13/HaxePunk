@@ -39,10 +39,14 @@ class Particle
 
 	public function scale(td:Float):Float
 	{
-		return _type._scale + _type._scaleRange * td;
+		return (_type._scale + _type._scaleRange * td) * startScaleCoef;
 	}
 
-	public function new() {}
+	public function new() {
+		startScaleCoef = 1 - Math.random() * 0.5;
+	}
+
+	var startScaleCoef:Float = 1;
 
 	// Particle information.
 	var _type:ParticleType;
