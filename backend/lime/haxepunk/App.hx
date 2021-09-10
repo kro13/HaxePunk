@@ -15,9 +15,13 @@ class App extends haxepunk._internal.FlashApp
 		#if (openfl >= "8.0.0")
 		// use the RenderEvent API
 		addEventListener(openfl.events.RenderEvent.RENDER_OPENGL, function(event) {
-			var renderer = event.renderer;
-			haxepunk.graphics.hardware.opengl.GLInternal.renderer = cast event.renderer;
-			haxepunk.graphics.hardware.opengl.GLInternal.gl = cast event.renderer.gl;
+			#if (openfl >= "8.9.2")
+			var renderer:openfl._internal.renderer.context3D.Context3DRenderer = cast event.renderer;
+			#else
+			var renderer:openfl.display.OpenGLRenderer = cast event.renderer;
+			haxepunk.graphics.hardware.opengl.GLInternal.gl = renderer.gl;
+			#end
+			haxepunk.graphics.hardware.opengl.GLInternal.renderer = renderer;
 			engine.onRender();
 		});
 		#else
